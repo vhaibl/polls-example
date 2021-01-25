@@ -58,6 +58,7 @@ class AnswerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Answer
         fields ='__all__'
+
     def create(self, validated_data):
         answer, created = Answer.objects.get_or_create(user=validated_data['user'], poll=validated_data['poll'],
                                                        question=validated_data['question'])

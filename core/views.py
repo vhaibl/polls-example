@@ -1,15 +1,13 @@
 from datetime import datetime
 
-from drf_yasg import openapi
-from drf_yasg.openapi import Parameter
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets
 from rest_framework.decorators import api_view
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import AllowAny, IsAdminUser
 from rest_framework.response import Response
 
-from core.models import Poll, Choice, Question, Answer
+from core.models import Poll, Answer
 from core.serializers import PollSerializer, QuestionSerializer, AnswerSerializer, ChoiceSerializer
 
 
@@ -44,27 +42,6 @@ class PollViewSet(viewsets.ModelViewSet):
             return [permission() for permission in self.permission_classes_by_action[self.action]]
         except KeyError:
             return [permission() for permission in self.permission_classes]
-
-
-class QuestionViewSet(viewsets.GenericViewSet, mixins.RetrieveModelMixin):
-    serializer_class = QuestionSerializer
-    queryset = Question.objects.all()
-    permission_classes = [IsAdminUser,]
-    def retrieve(self, request, *args, **kwargs):
-        pk = kwargs.get('pk')
-        queryset = Poll.objects.all()
-
-
-class ChoiceViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = ChoiceSerializer
-    queryset = Choice.objects.all()
-    permission_classes = [IsAdminUser,]
-
-
-class AnswerViewSet(viewsets.ModelViewSet):
-    serializer_class = AnswerSerializer
-    queryset = Answer.objects.all()
-    permission_classes = [AllowAny,]
 
 
 @api_view(['GET',])
